@@ -1,8 +1,8 @@
-import { Layout as DashboardLayout } from "/src/layouts/index.js";
-import { CippTablePage } from "/src/components/CippComponents/CippTablePage.jsx";
+import { Layout as DashboardLayout } from "../../../../layouts/index.js";
+import { CippTablePage } from "../../../../components/CippComponents/CippTablePage.jsx";
 import CippExchangeActions from "../../../../components/CippComponents/CippExchangeActions";
-import { CippHVEUserDrawer } from "/src/components/CippComponents/CippHVEUserDrawer.jsx";
-import { CippSharedMailboxDrawer } from "/src/components/CippComponents/CippSharedMailboxDrawer.jsx";
+import { CippHVEUserDrawer } from "../../../../components/CippComponents/CippHVEUserDrawer.jsx";
+import { CippSharedMailboxDrawer } from "../../../../components/CippComponents/CippSharedMailboxDrawer.jsx";
 
 const Page = () => {
   const pageTitle = "Mailboxes";
@@ -64,6 +64,6 @@ const Page = () => {
   );
 };
 
-Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+Page.getLayout = (page) => <DashboardLayout allTenantsSupport={false}>{page}</DashboardLayout>;
 
 export default Page;
