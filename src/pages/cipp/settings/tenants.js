@@ -14,6 +14,7 @@ import {
   Delete,
   Add,
   Refresh,
+  VpnKey,
 } from "@mui/icons-material";
 import cacheTypes from "../../../data/CIPPDBCacheTypes.json";
 
@@ -51,6 +52,14 @@ const Page = () => {
       data: { tenantFilter: "customerId" },
       confirmText: "Are you sure you want to refresh the CPV permissions for [displayName]?",
       multiPost: false,
+      condition: (row) =>
+        row.displayName !== "*Partner Tenant" && row.delegatedPrivilegeStatus !== "directTenant",
+    },
+    {
+      label: "Re-authenticate Connection",
+      link: "/onboardingv2?selectedOption=AddTenant&tenantType=Direct",
+      icon: <VpnKey />,
+      condition: (row) => row.delegatedPrivilegeStatus === "directTenant",
     },
     {
       label: "Reset CPV Permissions",
@@ -83,6 +92,7 @@ const Page = () => {
       data: { Name: "Name", TenantFilter: "customerId" },
       confirmText: "Select the cache type to refresh for [displayName]:",
       multiPost: false,
+      allowResubmit: true,
       hideBulk: true,
       fields: [
         {
@@ -101,7 +111,7 @@ const Page = () => {
         },
       ],
       customDataformatter: (rowData, actionData, formData) => {
-        const tenantFilter = rowData?.customerId || rowData?.defaultDomainName || "";
+        const tenantFilter = rowData?.defaultDomainName || rowData?.customerId || "";
         const cacheTypeName = formData.Name?.value || formData.Name || "";
         return {
           Name: cacheTypeName,
@@ -117,6 +127,8 @@ const Page = () => {
       "displayName",
       "defaultDomainName",
       "delegatedPrivilegeStatus",
+      "directTenantUserPrincipalName",
+      "directTenantAuthDate",
       "Excluded",
       "ExcludeDate",
       "ExcludeUser",
@@ -142,6 +154,16 @@ const Page = () => {
     {
       filterName: "Excluded tenants",
       value: [{ id: "Excluded", value: "Yes" }],
+      type: "column",
+    },
+    {
+      filterName: "Direct tenants",
+      value: [{ id: "delegatedPrivilegeStatus", value: "Direct Tenant" }],
+      type: "column",
+    },
+    {
+      filterName: "GDAP tenants",
+      value: [{ id: "delegatedPrivilegeStatus", value: "GDAP Tenant" }],
       type: "column",
     },
   ];

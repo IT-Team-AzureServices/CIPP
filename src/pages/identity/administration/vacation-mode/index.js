@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import Link from "next/link";
 import { EventAvailable } from "@mui/icons-material";
 import { useSettings } from "../../../../hooks/use-settings.js";
+import ScheduledTaskDetails from "../../../../components/CippComponents/ScheduledTaskDetails";
 
 const Page = () => {
   const initialState = useSettings();
@@ -61,6 +62,11 @@ const Page = () => {
       type: "column",
     },
     {
+      filterName: "Mail Forwarding",
+      value: [{ id: "Name", value: "Forwarding Vacation" }],
+      type: "column",
+    },
+    {
       filterName: "Out of Office",
       value: [{ id: "Name", value: "OOO Vacation" }],
       type: "column",
@@ -85,14 +91,10 @@ const Page = () => {
       simpleColumns={["Tenant", "Name", "Reference", "TaskState", "ScheduledTime", "ExecutedTime"]}
       filters={filterList}
       offCanvas={{
-        extendedInfoFields: [
-          "Name",
-          "TaskState",
-          "ScheduledTime",
-          "Reference",
-          "Tenant",
-          "ExecutedTime",
-        ],
+        children: (extendedData) => (
+          <ScheduledTaskDetails data={extendedData} showActions={true} showTitle={false} />
+        ),
+        size: "xl",
         actions: actions,
       }}
     />

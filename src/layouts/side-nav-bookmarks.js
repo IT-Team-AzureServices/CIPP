@@ -24,7 +24,7 @@ export const SideNavBookmarks = ({ collapse = false }) => {
   const { bookmarks, setBookmarks } = useUserBookmarks();
   const [open, setOpen] = useState(settings.bookmarksOpen ?? false);
   const reorderMode = settings.bookmarkReorderMode || "arrows";
-  const locked = settings.bookmarkLocked ?? false;
+  const locked = settings.bookmarkLocked ?? true;
   const [sortOrder, setSortOrder] = useState(settings.bookmarkSortOrder || "custom");
   const [dragIndex, setDragIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
@@ -51,7 +51,7 @@ export const SideNavBookmarks = ({ collapse = false }) => {
       updatedBookmarks[index - 1] = temp;
       setBookmarks(updatedBookmarks);
     },
-    [bookmarks, setBookmarks]
+    [bookmarks, setBookmarks],
   );
 
   const moveBookmarkDown = useCallback(
@@ -63,7 +63,7 @@ export const SideNavBookmarks = ({ collapse = false }) => {
       updatedBookmarks[index + 1] = temp;
       setBookmarks(updatedBookmarks);
     },
-    [bookmarks, setBookmarks]
+    [bookmarks, setBookmarks],
   );
 
   const removeBookmark = useCallback(
@@ -75,7 +75,7 @@ export const SideNavBookmarks = ({ collapse = false }) => {
         setBookmarks(updatedBookmarks);
       }
     },
-    [bookmarks, setBookmarks]
+    [bookmarks, setBookmarks],
   );
 
   const animatedMoveUp = useCallback(
@@ -113,7 +113,7 @@ export const SideNavBookmarks = ({ collapse = false }) => {
         setAnimatingPair(null);
       }, 250);
     },
-    [animatingPair, bookmarks, moveBookmarkDown]
+    [animatingPair, bookmarks, moveBookmarkDown],
   );
 
   const triggerSortFlash = useCallback(() => {
@@ -154,7 +154,7 @@ export const SideNavBookmarks = ({ collapse = false }) => {
       setDragIndex(null);
       setDragOverIndex(null);
     },
-    [dragIndex, bookmarks, setBookmarks]
+    [dragIndex, bookmarks, setBookmarks],
   );
 
   const handleDragEnd = useCallback(() => {
@@ -460,9 +460,15 @@ export const SideNavBookmarks = ({ collapse = false }) => {
                         textOverflow: "ellipsis",
                         minHeight: "24px",
                         display: "flex",
-                        alignItems: "center",
+                        flexDirection: "column",
+                        justifyContent: "center",
                       }}
                     >
+                      {bookmark.category && (
+                        <Box component="span" sx={{ fontSize: 10, opacity: 0.6, lineHeight: 1.2 }}>
+                          {bookmark.category}
+                        </Box>
+                      )}
                       {bookmark.label}
                     </Box>
                   </ButtonBase>
@@ -516,16 +522,18 @@ export const SideNavBookmarks = ({ collapse = false }) => {
                         </IconButton>
                       </>
                     )}
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        removeBookmark(bookmark.path);
-                      }}
-                      sx={{ p: "2px" }}
-                    >
-                      <CloseIcon sx={{ fontSize: 16 }} />
-                    </IconButton>
+                    {!locked && (
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          removeBookmark(bookmark.path);
+                        }}
+                        sx={{ p: "2px" }}
+                      >
+                        <CloseIcon sx={{ fontSize: 16 }} />
+                      </IconButton>
+                    )}
                   </Stack>
                 </Stack>
               </li>
